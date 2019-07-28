@@ -1,0 +1,23 @@
+{
+  "name": "ethereumlabor",
+  "version": "1.0.0",
+  "description": "A project to visualize the Ethereum blockchain.",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eulphean/EthereumLabor.git"
+  },
+  "author": "Amay Kataria",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eulphean/EthereumLabor/issues"
+  },
+  "homepage": "https://github.com/eulphean/EthereumLabor#readme",
+  "devDependencies": {
+    "browser-sync": "^2.26.7",
+    "gulp": "^4.0.2"
+  }
+}

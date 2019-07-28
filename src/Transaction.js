@@ -13,4 +13,4 @@ class Transaction {
         //rect(posX, posY, width, height);
         ellipse(this.position[0], this.position[1], this.txSize, this.txSize);
     }
-}
+};

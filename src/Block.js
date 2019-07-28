@@ -1,4 +1,6 @@
-// Block definition.
+// Block definition. 
+// Something has changed. 
+// New chang.
 class Block {
     constructor(num, hash) {
       this.blockSize = 100; 
@@ -13,4 +15,4 @@ class Block {
       noStroke();
       rect(this.position[0], this.position[1], this.blockSize, this.blockSize);
     }
-}
+};

@@ -2,10 +2,12 @@ var startButton;
 var stopButton; 
 
 // Collections of Blocks and Transactions
+// Instances of Block.js & Transaction.js
 var transactions = []; 
 var blocks = [];
 
-// Ethereum controller.
+// Ethereum controller
+// Check Ethereum.js
 var ethereum;
 
 // ------------------------------- Sketch Setup ------------------------------
