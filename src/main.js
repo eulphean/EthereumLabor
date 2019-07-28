@@ -17,7 +17,7 @@ var farm;
 function setup() {
   // Canvas where all the visualization is running. 
   createCanvas(displayWidth, displayHeight); 
-  background(100);
+  background(0);
 
   // Initialize Ethereum controller.
   ethereum = new Ethereum();
@@ -58,15 +58,14 @@ function draw() {
 }
 
 // ------------------------------- Ethereum Subsribe Callbacks -----------------
-function onTransactionSubscribe(transactionHash) {
-  console.log('Transaction Hash: ' + transactionHash);
+function onTransactionData(txHash) {
+  console.log('Transaction Hash: ' + txHash);
       
-  // Create new transaction instance. 
-  var t = new Transaction(transactionHash);
-  transactions.push(t);
+  // Plan this conversation. 
+  farm.plantTransaction(txHash); 
 }
 
-function onBlockSubscribe(block) {
+function onBlockData(block) {
   console.log('New Block - Number: ' + block.number + ' Hash: ' + block.hash);
 
   // Create new block instance.
@@ -88,11 +87,13 @@ function onBlockUnsubscribe() {
 
 // ------------------------------- Button Callbacks ------------------------------
 function onStart() {
+  console.log('Start tracking...');
   // Subsribe
-  ethereum.subscribe(onTransactionSubscribe, onBlockSubscribe);
+  ethereum.subscribe(onTransactionData, onBlockData);
 }
 
 function onStop() {
+  console.log('Stop tracking...');
   // Unsubscribe
   ethereum.unsubscribe(onTransactionUnsubscribe, onBlockUnsubscribe)
 
