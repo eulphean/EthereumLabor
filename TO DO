@@ -1,6 +1,2 @@
-// Integrate GULP, so I can just run the process and it compiles with each SAVE.
-// Replace start/stop with a Keypress input rather than a button for cleaning the 
-// interface.\
-// What am I going to do about the visuals? How do I show Ethereum labor through this? 
-// Visuals, Visuals, Visuals....
-// Take inspiration from the infographics book.
+// Now fill the farm with incoming transactions..
+// Write the algorithm to plant a transaction. 

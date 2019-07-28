@@ -10,6 +10,9 @@ var blocks = [];
 // Check Ethereum.js
 var ethereum;
 
+// Transaction farm
+var farm; 
+
 // ------------------------------- Sketch Setup ------------------------------
 function setup() {
   // Canvas where all the visualization is running. 
@@ -18,6 +21,7 @@ function setup() {
 
   // Initialize Ethereum controller.
   ethereum = new Ethereum();
+  farm = new Farm();
   
   // Start button
   var col = color(153, 255, 153);
@@ -38,7 +42,7 @@ function setup() {
 
 // ------------------------------- Sketch Draw (loop) ------------------------
 function draw() {
-  background(100);
+  // background(100);
 
   // Draw transactions. 
   for (var i = 0; i < transactions.length; i++) {
@@ -49,6 +53,8 @@ function draw() {
   for (var i = 0; i < blocks.length; i++) {
     blocks[i].draw();
   }
+
+  farm.draw();
 }
 
 // ------------------------------- Ethereum Subsribe Callbacks -----------------
