@@ -1,9 +1,6 @@
 var startButton; 
 var stopButton; 
 
-var blockSize = 100; 
-var txSize = 10; 
-
 // Collections of Blocks and Transactions
 var transactions = []; 
 var blocks = [];
@@ -52,7 +49,7 @@ function draw() {
   }
 }
 
-// ------------------------------- Ethereum Subsribe Callbacks ----------------
+// ------------------------------- Ethereum Subsribe Callbacks -----------------
 function onTransactionSubscribe(transactionHash) {
   console.log('Transaction Hash: ' + transactionHash);
       
@@ -72,7 +69,7 @@ function onBlockSubscribe(block) {
   transactions.length = 0;
 }
 
-// ------------------------------- Ethereum Unsubscribe Callbacks --------------
+// ------------------------------- Ethereum Unsubscribe Callbacks ---------------
 function onTransactionUnsubscribe() {
   transactions.length = 0; 
 }
@@ -83,12 +80,14 @@ function onBlockUnsubscribe() {
 
 // ------------------------------- Button Callbacks ------------------------------
 function onStart() {
-  // Initiate subscriptions. 
+  // Subsribe
   ethereum.subscribe(onTransactionSubscribe, onBlockSubscribe);
 }
 
 function onStop() {
+  // Unsubscribe
   ethereum.unsubscribe(onTransactionUnsubscribe, onBlockUnsubscribe)
+
   // Reset canvas
   background(100);
 }
