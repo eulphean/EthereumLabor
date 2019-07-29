@@ -1,13 +1,35 @@
+// Transaction Farm: This farm is maintained by two parallel processes. 
+// [Planting]: The planting process takes incoming pending transactions 
+// and renders them as green dots in the farm. 
+// [Mining]: Starting from the latest block, transactions are obtained for every
+// new block by querying for it every interval. Once a new block is obtained in 
+// the canonical chain, transactions are extracted from it and compared with the 
+// planted transactions in the farm. The transactions that are mined are turned red. 
+
+// Metrics: The metrics are calculated by 3 different strategies.
+// [New Block Headers]: These are events triggered when a new block is mined. Metrics 
+// like Best Block, Last Block time are calculated with this. 
+// [Block Interval]: When a [New Block Header] event is triggered, it's not necessary
+// that this new block on the chain is synced on with this node. Thus, getBlock('latest')
+// could still return the previous block. Therefore, another interval based method is used
+// to query for new blocks. Using this, we set the difficulty and average hash rate of the 
+// system. 
+// [Eth Price & Market Cap]: For this, I'll be using an CoinCap API. 
+// [Farm Capacity]: (unsure) Based on the capacity of the farm, we will be able to calculate
+// how much of the farm capacity is active right now. This will be a very dynamic number. 
+// [Wattage]: For this, I'll use the average number of kWH/difficulty in the link I have. 
+// Through that difficulty, this kWH can be assumbed and extrapolated. 
 var startButton; 
 var stopButton; 
 
 // Ethereum controller
-// Check Ethereum.js
 var ethereum;
-
 // Transaction farm
-// Check Farm.js
 var farm; 
+// Keep track of the latest block number. 
+var currentBlockNum = -1; 
+// Interval instance to keep track of the next block that I will query. 
+var newBlockInterval; 
 
 // ------------------------------- Sketch Setup ------------------------------
 function setup() {
@@ -38,83 +60,65 @@ function setup() {
 
 // ------------------------------- Sketch Draw (loop) ------------------------
 function draw() {
+  // Optimization: Render the farm once and stop. 
   farm.draw();
-
-  let fps = frameRate();
-  fill(255);
-  stroke(0);
-  text("FPS: " + fps.toFixed(2), 20, height - 50);
-
   noLoop();
 }
 
 // ------------------------------- Ethereum Subsribe Callbacks -----------------
-function onTransactionData(txHash) {
-  // console.log('Transaction Hash: ' + txHash);
-      
-  // Plan this conversation. 
-  farm.plantTransaction(txHash); 
+function onPendingTransaction(txHash) {
+  // Plant this transaction in the farm. 
+  farm.plant(txHash); 
 }
 
-function onBlockData(block) {
-  console.log('New Block Received: ' + block.number);
-
-  // Add a timeout function giving the node time to sync the blockchain before 
-  // I fetch detailed information about the block. 
-  setTimeout(function() {
-    ethereum.getBlockTransactions(block.number, onTransactionsInBlock);
-  }, 500);
-}
-
-function onTransactionsInBlock(transactions) {
-  farm.mineFarm(transactions); 
-}
-
-// ------------------------------- Ethereum Unsubscribe Callbacks ---------------
-function onTransactionUnsubscribe() {
-}
-
-function onBlockUnsubscribe() {
+function onNewBlockHeader(block) {
+  console.log('New Block Header Received: ' + block.number);
+  // Update Last Block Time, Best Block. 
 }
 
 // ------------------------------- Button Callbacks ------------------------------
 function onStart() {
   console.log('Start tracking...');
-  // Subsribe
-  ethereum.subscribe(onTransactionData, onBlockData);
+  
+  // Subsribe to new blocks and pending transactions. 
+  ethereum.subscribe(onPendingTransaction, onNewBlockHeader);
+
+  // Set Starting Block number from where I'll beging tracking transactions. 
+  ethereum.getLatestBlock(setStartBlock);
 }
 
 function onStop() {
   console.log('Stop tracking...');
-  // Unsubscribe
-  ethereum.unsubscribe(onTransactionUnsubscribe, onBlockUnsubscribe);
+
+  // Unsubscribe from pending transactions and new blocks. 
+  ethereum.unsubscribe();
+
+  // Clear interval for the new blocks method. 
+  clearInterval(newBlockInterval);
 
   // Unpluck all the transactions from the farm. 
   farm.clearFarm();
 }
 
+// ------------------------------- Critical Callbacks ------------------------------
+function setStartBlock(blockNum) {
+  currentBlockNum = blockNum;
+  console.log('Starting Block Number: ' + currentBlockNum); 
 
-  // Go Extract the actual block
-  // Extract all the transactions hashes
-  // Compare these transactions with the transactions in the farm
-  // Mark the transactions that are mined with their state, change their color as well. 
-  // Complex logic. 
+  // Start querying for transactions starting with this block num
+  // Set an interval method to query for new blocks in the cononical chain. 
+  newBlockInterval = setInterval(function() {
+    console.log('Query for Block: ' + currentBlockNum);
+    ethereum.getBlockByNum(currentBlockNum, onTransactionsInNewBlock);
+  }, 1000);
+}
 
-  // After this, transaction farm will be done once. 
+function onTransactionsInNewBlock(minedTransactions) {
+    // Update Difficulty, Hash Rate
 
-  // Create the frame for the putting the metrics. 
+    // Mine these completed transactions in the farm.  
+    farm.mineFarm(minedTransactions); 
 
-  // Add some animation to make the transaction farm pretty.
-
-  // Can we optimize the loop, I feel it's making it real slow. 
-
-  // Push the updates to website.
-
-  // Send it to Stephanie.
-
-  // Work on this all day today so I can finish it in time. 
-
-  // Tuesday, Wednesday (Grants)
-  // Dundee, Neon Festival (REACT) - AR Grant
-  // Images ($1000 E comission)
-  // AI & Blockchain (Thoughtworks)
+    // Update currentBlockNum to query next block. 
+    currentBlockNum = currentBlockNum + 1; 
+}

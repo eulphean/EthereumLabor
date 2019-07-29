@@ -10,31 +10,6 @@ class Ethereum {
         this.web3 =new Web3(this.web3Provider);
     }
 
-    getBlockTransactions(blockNumber, onTransactions) {
-        // Array packed with all transactions in this block. 
-        var transactions = []; 
-        console.log('Request detailed Block data: ' + blockNumber);
-        this.web3.eth.getBlock('latest', false, function(error, result) {
-            if(!error) {
-                if (result != null) {
-                    // result.transactions.forEach(function(tx) {
-                    //     transactions.push(tx); 
-                    // });
-                    console.log('Received Detailed Block data: ' + result.number);
-                    console.log('# of Transactions: ' + result.transactions.length);
-                    
-                    // Send back transactions data with this callback
-                    onTransactions(result.transactions); 
-                } else {
-                    console.warn('Oops: Result is null. Maybe the block is not ready to be extracted yet.');
-                }
-            }
-            else {
-                console.error(error);
-            }
-        });
-    }
-
     subscribe(onTransaction, onBlock) {
         // Subscribe to pending transactions. 
         this.txSubscription = this.web3.eth.subscribe('pendingTransactions', function (error, result) {
@@ -45,19 +20,40 @@ class Ethereum {
         }).on("data", onBlock); 
     }
 
-    unsubscribe(onTransaction, onBlock) {
-        // Unsubscribe from transactions. 
-        this.txSubscription.unsubscribe(function (error, success) {
-            //if (success)
-            //console.log('Successfully unsubscribed from transactions. ');
-            onTransaction();
-        });
+    unsubscribe() {
+        // Unsubscribe from pending transactions. 
+        this.txSubscription.unsubscribe(function (error, success) {});
 
-        // Unsubscribe from new blocks. 
-        this.blockSubscription.unsubscribe(function (error, success) {
-            //if (success)
-            //console.log('Successfully unsubscribed from new blocks.');
-            onBlock();
+        // Unsubscribe from new block headers. 
+        this.blockSubscription.unsubscribe(function (error, success) {});
+    }
+
+    getBlockByNum(blockNum, onTransactions) {
+        this.web3.eth.getBlock(blockNum, false, function(error, result) {
+            if(!error) {
+                if (result != null) {
+                    var num = result.number; 
+                    if (blockNum === num) {
+                        console.log('Fetched Block, Transactions: ' + blockNum + ', ' + result.transactions.length) ;
+                        // Send back transactions data with this callback
+                        onTransactions(result.transactions); 
+                    }
+                } 
+            }
+            else {
+                console.error(error);
+            }
+        });
+    }
+
+    getLatestBlock(setBlockNum) {
+        this.web3.eth.getBlock('latest', false, function(error, result) {
+            if(!error) {
+                if (result != null) {
+                    let blockNum = result.number; 
+                    setBlockNum(blockNum);
+                }
+            }
         });
     }
 };

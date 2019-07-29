@@ -24,8 +24,9 @@ class Cell {
     }
 }
 
-// A 2D farm covering the screen.
+// A 2D farm as the background of this machine. 
 // This farm will be planted with transactions. 
+// Then these transactions will be mined. 
 class Farm {
     constructor() {
       this.cellWidth = 10; 
@@ -60,7 +61,7 @@ class Farm {
       }
     }
 
-    plantTransaction(txHash) {
+    plant(txHash) {
         // Get a random cell from the farm. 
         // Plant the transaction
         var cell = this.getRandomCell(); 
@@ -89,7 +90,7 @@ class Farm {
 
     mineFarm(transactions) {
         if (transactions.length > 0) {
-            console.log('Mining the farm now.');
+            console.log('Mining Farm.');
             for (var i =0; i < this.columns; i++) {
                 for (var j = 0; j < this.rows; j++) {
                     if (this.cells[i][j].isPlanted) {
@@ -117,11 +118,14 @@ class Farm {
     }
 
     clearFarm() {
-        for (var i =0; i < this.columns; i++) {
+        for (var i=0; i < this.columns; i++) {
             for (var j = 0; j < this.rows; j++) {
                 this.cells[i][j].isPlanted = false;
                 this.cells[i][j].col = 50; 
                 this.cells[i][j].txHash = '';
+
+                // Redraw this cell. 
+                this.cells[i][j].draw(this.cellWidth, this.cellHeight);
             }
         }
     }
