@@ -1,8 +1,14 @@
-// Fade in animation for the transaction. 
-// When I stop, clear the transactions from the cells. 
-// With every new block, get the block object getBlock. It has an array of all the transaction hashes. 
-// Go through the Farm and mark the mined transactions (in the Block) as Mined... (these transactions are mined) and slowly fade them out. 
-// Complete these animations..
 
+Function:
+// GUI controls: Set the capacity of the farm. 
+// Capacity determines how many cells can be planted with transactions
+// If that capacity is reached, then other transactions will be ignored. 
+// Farm has to wait for those transactions to be mined or attended to. 
+// Mouse press to hide/show the GUI controls. 
 
-// Setup the Frame for STATS (Different sections.)
+// Design the frame for the metrics to be show. 
+// Some design cycles before I can start coding the frame. 
+// How will I loop between multiple metrics of the farm. 
+
+Aesthetics: 
+// Animations for cells getting populated. 
