@@ -61,8 +61,6 @@ class Farm {
     }
 
     plantTransaction(txHash) {
-        // TODO: Every cell that is planted with a transaction must contain 
-        // link to the etherscan with that pending transaction.
         // Get a random cell from the farm. 
         // Plant the transaction
         var cell = this.getRandomCell(); 
@@ -71,21 +69,60 @@ class Farm {
         cell.isPlanted = true; 
         cell.col = color(0, 255, 0);
         cell.txHash = txHash; 
+
+        // Redraw this cell. 
+        cell.draw(this.cellWidth, this.cellHeight);
     }
 
     getRandomCell() {
         var xRand = Math.floor(random(this.columns));
         var yRand = Math.floor(random(this.rows));
-        console.log('Calculated x, y: ' + xRand + ', ' + yRand);
 
         // Keep looping till a dead crop is found. 
         while(this.cells[xRand][yRand].isPlanted) {
             xRand = Math.floor(random(this.columns));
             yRand = Math.floor(random(this.rows));
-            console.log('Calculated x, y: ' + xRand + ', ' + yRand);
         }
 
-        console.log('Found a random cell at: ' + xRand + ', ' + yRand);
         return this.cells[xRand][yRand]; 
+    }
+
+    mineFarm(transactions) {
+        if (transactions.length > 0) {
+            console.log('Mining the farm now.');
+            for (var i =0; i < this.columns; i++) {
+                for (var j = 0; j < this.rows; j++) {
+                    if (this.cells[i][j].isPlanted) {
+                        var hash = this.cells[i][j].txHash; 
+                        var found = transactions.find(function(t) {
+                            return t === hash;
+                        });
+                        
+                        // Mine that cell if this transaction is found in mined block. 
+                        if (found) {
+                            console.log('Transaction found');
+                            this.cells[i][j].col = color(255, 0, 0); 
+                            this.cells[i][j].isPlanted = false; // Run an animation to unplant this block. 
+                            this.cells[i][j].txHash = '';
+                            
+                            // Redraw this cell
+                            this.cells[i][j].draw(this.cellWidth, this.cellHeight);
+                        }
+                    }
+                }
+            }
+        } else {
+            console.log('Skip Mining: No transactions to mine.');
+        }
+    }
+
+    clearFarm() {
+        for (var i =0; i < this.columns; i++) {
+            for (var j = 0; j < this.rows; j++) {
+                this.cells[i][j].isPlanted = false;
+                this.cells[i][j].col = 50; 
+                this.cells[i][j].txHash = '';
+            }
+        }
     }
   }

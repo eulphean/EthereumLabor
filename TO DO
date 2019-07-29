@@ -1,3 +1,8 @@
-// Now fill the farm with incoming transactions..
-// Write the algorithm to plant a transaction. 
-// Plan a transaction into the farm. 
+// Fade in animation for the transaction. 
+// When I stop, clear the transactions from the cells. 
+// With every new block, get the block object getBlock. It has an array of all the transaction hashes. 
+// Go through the Farm and mark the mined transactions (in the Block) as Mined... (these transactions are mined) and slowly fade them out. 
+// Complete these animations..
+
+
+// Setup the Frame for STATS (Different sections.)

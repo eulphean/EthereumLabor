@@ -10,6 +10,31 @@ class Ethereum {
         this.web3 =new Web3(this.web3Provider);
     }
 
+    getBlockTransactions(blockNumber, onTransactions) {
+        // Array packed with all transactions in this block. 
+        var transactions = []; 
+        console.log('Request detailed Block data: ' + blockNumber);
+        this.web3.eth.getBlock('latest', false, function(error, result) {
+            if(!error) {
+                if (result != null) {
+                    // result.transactions.forEach(function(tx) {
+                    //     transactions.push(tx); 
+                    // });
+                    console.log('Received Detailed Block data: ' + result.number);
+                    console.log('# of Transactions: ' + result.transactions.length);
+                    
+                    // Send back transactions data with this callback
+                    onTransactions(result.transactions); 
+                } else {
+                    console.warn('Oops: Result is null. Maybe the block is not ready to be extracted yet.');
+                }
+            }
+            else {
+                console.error(error);
+            }
+        });
+    }
+
     subscribe(onTransaction, onBlock) {
         // Subscribe to pending transactions. 
         this.txSubscription = this.web3.eth.subscribe('pendingTransactions', function (error, result) {
@@ -17,7 +42,7 @@ class Ethereum {
 
         // Subscribe to new blocks. 
         this.blockSubscription = this.web3.eth.subscribe('newBlockHeaders', function (error, result) {    
-        }).on("data", onBlock);
+        }).on("data", onBlock); 
     }
 
     unsubscribe(onTransaction, onBlock) {
