@@ -1,11 +1,5 @@
 
 Function:
-// GUI controls: Set the capacity of the farm. 
-// Capacity determines how many cells can be planted with transactions
-// If that capacity is reached, then other transactions will be ignored. 
-// Farm has to wait for those transactions to be mined or attended to. 
-// Mouse press to hide/show the GUI controls. 
-
 // Design the frame for the metrics to be show. 
 // Some design cycles before I can start coding the frame. 
 // How will I loop between multiple metrics of the farm. 
