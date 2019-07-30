@@ -29,8 +29,8 @@ class Cell {
 // Then these transactions will be mined. 
 class Farm {
     constructor() {
-      this.cellWidth = 5; 
-      this.cellHeight = 5;
+      this.cellWidth = 10; 
+      this.cellHeight = 10;
       this.columns = displayWidth/this.cellWidth; 
       this.rows = displayHeight/this.cellHeight;
       this.cells = [];   
