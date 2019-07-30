@@ -83,8 +83,6 @@ function draw() {
       isTracking = false; 
     }
   }
-
-  noLoop();
 }
 
 // ------------------------------- Ethereum Subsribe Callbacks -----------------
@@ -139,7 +137,7 @@ function onTransactionsInNewBlock(minedTransactions) {
     // Update Difficulty, Hash Rate
 
     // Mine these completed transactions in the farm.  
-    farm.mineFarm(minedTransactions); 
+    farm.mine(minedTransactions); 
 
     // Update currentBlockNum to query next block. 
     currentBlockNum = currentBlockNum + 1; 

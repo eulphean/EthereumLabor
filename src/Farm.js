@@ -11,6 +11,8 @@ class Cell {
         this.isPlanted = false; 
         // Transaction hash of the transaction.  
         this.txHash = ''; 
+        // Death timer variable
+        this.deathTimeout = null; 
     }    
 
     draw(w, h) {
@@ -21,6 +23,12 @@ class Cell {
             fill(this.col);
             ellipse(0, 0, w, h); // Rather than rectangles, these will be circles actually at the center of the cell. 
         pop();
+    }
+
+    set(color, planted, tx) {
+        this.col = color; 
+        this.isPlanted = planted; 
+        this.txHash = tx; 
     }
 }
 
@@ -66,6 +74,18 @@ class Farm {
       }
     }
 
+    kill(cell) {
+        console.log('Killing planted cell.');
+        // Reset cell. 
+        cell.set(50, false, '')
+        clearTimeout(cell.deathTimeout);
+        // Redraw cell. 
+        cell.draw(this.cellWidth, this.cellHeight);
+
+        // Killed. 
+        this.plantedCells--; 
+    }
+
     plant(txHash) {
         // Are we allowed to plant? 
         if (this.plantedCells < this.maxCells) {
@@ -75,15 +95,48 @@ class Farm {
             var cell = this.getRandomCell(); 
 
             // Plant the transaction in that cell by updating these parameters. 
-            cell.isPlanted = true; 
-            cell.col = color(0, 255, 0);
-            cell.txHash = txHash; 
+            // set(color, isPlanted, txHash)
+            // setTimeout(callback, timeout, parameter)
+            cell.set(color(0, 255, 0), true, txHash);
+            cell.deathTimeout = setTimeout(this.kill.bind(this), 5 * 60 * 1000, cell); // Kill this transaction after 10 minutes
 
-            // Redraw this cell. 
+            // Redraw cell. 
             cell.draw(this.cellWidth, this.cellHeight);
             
             // Planted. 
             this.plantedCells++; 
+        }
+    }
+
+    mine(transactions) {
+        if (transactions.length > 0) {
+            console.log('Mining Farm.');
+            for (var i =0; i < this.columns; i++) {
+                for (var j = 0; j < this.rows; j++) {
+                    if (this.cells[i][j].isPlanted) {
+                        var hash = this.cells[i][j].txHash; 
+                        var found = transactions.find(function(t) {
+                            return t === hash;
+                        });
+                        
+                        // Mine that cell if this transaction is found in mined block. 
+                        if (found) {
+                            console.log('Transaction found');
+                            // Reset cell. 
+                            this.cells[i][j].set(color(255, 0, 0), false, '');
+                            clearTimeout(this.cells[i][j].deathTimeout);
+                            
+                            // Redraw cell.
+                            this.cells[i][j].draw(this.cellWidth, this.cellHeight);
+                            
+                            // Mined.
+                            this.plantedCells--; 
+                        }
+                    }
+                }
+            }
+        } else {
+            console.log('Skip Mining: No transactions to mine.');
         }
     }
 
@@ -100,46 +153,14 @@ class Farm {
         return this.cells[xRand][yRand]; 
     }
 
-    mineFarm(transactions) {
-        if (transactions.length > 0) {
-            console.log('Mining Farm.');
-            for (var i =0; i < this.columns; i++) {
-                for (var j = 0; j < this.rows; j++) {
-                    if (this.cells[i][j].isPlanted) {
-                        var hash = this.cells[i][j].txHash; 
-                        var found = transactions.find(function(t) {
-                            return t === hash;
-                        });
-                        
-                        // Mine that cell if this transaction is found in mined block. 
-                        if (found) {
-                            console.log('Transaction found');
-                            this.cells[i][j].col = color(255, 0, 0); 
-                            this.cells[i][j].isPlanted = false; // Run an animation to unplant this block. 
-                            this.cells[i][j].txHash = '';
-                            
-                            // Redraw this cell
-                            this.cells[i][j].draw(this.cellWidth, this.cellHeight);
-                            
-                            // Mined.
-                            this.plantedCells--; 
-                        }
-                    }
-                }
-            }
-        } else {
-            console.log('Skip Mining: No transactions to mine.');
-        }
-    }
-
     clearFarm() {
         for (var i=0; i < this.columns; i++) {
             for (var j = 0; j < this.rows; j++) {
-                this.cells[i][j].isPlanted = false;
-                this.cells[i][j].col = 50; 
-                this.cells[i][j].txHash = '';
+                // Reset cell.
+                this.cells[i][j].set(50, false, '');
+                clearTimeout(this.cells[i][j].deathTimeout); 
 
-                // Redraw this cell. 
+                // Redraw cell. 
                 this.cells[i][j].draw(this.cellWidth, this.cellHeight);
             }
         }
