@@ -29,8 +29,8 @@ class Cell {
 // Then these transactions will be mined. 
 class Farm {
     constructor() {
-      this.cellWidth = 10; 
-      this.cellHeight = 10;
+      this.cellWidth = 5; 
+      this.cellHeight = 5;
       this.columns = displayWidth/this.cellWidth; 
       this.rows = displayHeight/this.cellHeight;
       this.cells = [];   
@@ -51,6 +51,11 @@ class Farm {
           this.cells[i][j] = cell;
         }
       }
+      
+      // Farm stats. 
+      this.totalCells = this.rows * this.columns;  
+      this.plantedCells = 0; 
+      this.maxCells = this.totalCells; // Max available cells for planting. 
     }
   
     draw() {
@@ -62,17 +67,24 @@ class Farm {
     }
 
     plant(txHash) {
-        // Get a random cell from the farm. 
-        // Plant the transaction
-        var cell = this.getRandomCell(); 
+        // Are we allowed to plant? 
+        if (this.plantedCells < this.maxCells) {
+            // Calculate available cells. 
+            // Get a random cell from the farm. 
+            // Plant the transaction
+            var cell = this.getRandomCell(); 
 
-        // Plant the transaction in that cell by updating these parameters. 
-        cell.isPlanted = true; 
-        cell.col = color(0, 255, 0);
-        cell.txHash = txHash; 
+            // Plant the transaction in that cell by updating these parameters. 
+            cell.isPlanted = true; 
+            cell.col = color(0, 255, 0);
+            cell.txHash = txHash; 
 
-        // Redraw this cell. 
-        cell.draw(this.cellWidth, this.cellHeight);
+            // Redraw this cell. 
+            cell.draw(this.cellWidth, this.cellHeight);
+            
+            // Planted. 
+            this.plantedCells++; 
+        }
     }
 
     getRandomCell() {
@@ -108,6 +120,9 @@ class Farm {
                             
                             // Redraw this cell
                             this.cells[i][j].draw(this.cellWidth, this.cellHeight);
+                            
+                            // Mined.
+                            this.plantedCells--; 
                         }
                     }
                 }
@@ -128,5 +143,11 @@ class Farm {
                 this.cells[i][j].draw(this.cellWidth, this.cellHeight);
             }
         }
+    }
+
+    setFarmCapacity(capacity) {
+        // Capacity is a number between 0-100
+        this.maxCells = int((capacity / 100) * this.totalCells); 
+        console.log('Set Farm Capacity (%, maxCells): ' + capacity + '%' + ', ' + this.maxCells);
     }
   }

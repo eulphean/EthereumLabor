@@ -31,6 +31,18 @@ var currentBlockNum = -1;
 // Interval instance to keep track of the next block that I will query. 
 var newBlockInterval; 
 
+// Raw states. 
+var initialDraw = true; 
+var isTracking = false; 
+var isVisible = true; 
+
+// GUI Variables. 
+var gui; 
+// Farm capacity. 
+var farmCapacity = 50; // Default value. 
+var startStop = false; 
+var hideLabel = 'Press h to hide GUI and cursor';
+
 // ------------------------------- Sketch Setup ------------------------------
 function setup() {
   // Canvas where all the visualization is running. 
@@ -40,28 +52,38 @@ function setup() {
   // Initialize Ethereum controller.
   ethereum = new Ethereum();
   farm = new Farm();
-  
-  // Start button
-  var col = color(153, 255, 153);
-  startButton = createButton('Start');
-  startButton.position(20, 20);
-  startButton.size(80, 40)
-  startButton.style('background-color', col)
-  startButton.mousePressed(onStart);
 
-  // Stop button
-  col = color(255, 102, 102);
-  stopButton = createButton('Stop');
-  stopButton.position(120, 20);
-  stopButton.size(80, 40);
-  stopButton.style('background-color', col);
-  stopButton.mousePressed(onStop); 
+  // Initialize GUI
+  sliderRange(1, 90, 1);
+  gui = createGui('Ethereum Labor', 20, 20);
+  gui.addGlobals('farmCapacity', 'startStop', 'hideLabel');
 }
 
 // ------------------------------- Sketch Draw (loop) ------------------------
 function draw() {
-  // Optimization: Render the farm once and stop. 
-  farm.draw();
+  if (initialDraw) {
+    // Optimization: Render the farm once and stop. 
+    farm.draw();
+    initialDraw = false; 
+  }
+
+  // For every GUI change, draw is called. 
+  farm.setFarmCapacity(farmCapacity);
+
+  // Dingy logic to start/stop tracking based on 
+  // a GUI button. 
+  if (startStop) {
+    if (isTracking == false) {
+      startTracking(); 
+      isTracking = true; 
+    }
+  } else {
+    if (isTracking) {
+      stopTracking(); 
+      isTracking = false; 
+    }
+  }
+
   noLoop();
 }
 
@@ -77,7 +99,7 @@ function onNewBlockHeader(block) {
 }
 
 // ------------------------------- Button Callbacks ------------------------------
-function onStart() {
+function startTracking() {
   console.log('Start tracking...');
   
   // Subsribe to new blocks and pending transactions. 
@@ -87,7 +109,7 @@ function onStart() {
   ethereum.getLatestBlock(setStartBlock);
 }
 
-function onStop() {
+function stopTracking() {
   console.log('Stop tracking...');
 
   // Unsubscribe from pending transactions and new blocks. 
@@ -121,4 +143,15 @@ function onTransactionsInNewBlock(minedTransactions) {
 
     // Update currentBlockNum to query next block. 
     currentBlockNum = currentBlockNum + 1; 
+}
+
+function keyPressed() {
+  isVisible = !isVisible; 
+  if (isVisible) {
+    gui.show();
+    cursor();
+  } else {
+    gui.hide();
+    noCursor();
+  }
 }
