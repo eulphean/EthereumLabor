@@ -40,7 +40,10 @@ var isVisible = true;
 var gui; 
 // Farm capacity. 
 var farmCapacity = 50; // Default value. 
+// Cell size 
+var cellSize = 10; // Default value. 
 var startStop = false; 
+var resetFarm = false; 
 var hideLabel = 'Press h to hide GUI and cursor';
 
 // ------------------------------- Sketch Setup ------------------------------
@@ -51,12 +54,15 @@ function setup() {
 
   // Initialize Ethereum controller.
   ethereum = new Ethereum();
-  farm = new Farm();
+  farm = new Farm(cellSize);
 
   // Initialize GUI
   sliderRange(1, 90, 1);
   gui = createGui('Ethereum Labor', 20, 20);
-  gui.addGlobals('farmCapacity', 'startStop', 'hideLabel');
+  gui.addGlobals('farmCapacity');
+  sliderRange(5, 15, 5);
+  gui.addGlobals('cellSize', 'resetFarm');
+  gui.addGlobals('startStop', 'hideLabel');
 }
 
 // ------------------------------- Sketch Draw (loop) ------------------------
@@ -69,6 +75,7 @@ function draw() {
 
   // For every GUI change, draw is called. 
   farm.setFarmCapacity(farmCapacity);
+  farm.setCellSize(cellSize);
 
   // Dingy logic to start/stop tracking based on 
   // a GUI button. 
@@ -83,6 +90,15 @@ function draw() {
       isTracking = false; 
     }
   }
+
+  // Reset the farm
+  if (resetFarm) {
+    background(0);
+    farm.recreateFarm();
+    resetFarm = !resetFarm; 
+    // Redraw the farm. 
+    initialDraw = true; 
+  }
 }
 
 // ------------------------------- Ethereum Subsribe Callbacks -----------------
@@ -92,7 +108,7 @@ function onPendingTransaction(txHash) {
 }
 
 function onNewBlockHeader(block) {
-  console.log('New Block Header Received: ' + block.number);
+  // console.log('New Block Header Received: ' + block.number);
   // Update Last Block Time, Best Block. 
 }
 
@@ -109,7 +125,6 @@ function startTracking() {
 
 function stopTracking() {
   console.log('Stop tracking...');
-
   // Unsubscribe from pending transactions and new blocks. 
   ethereum.unsubscribe();
 
@@ -128,7 +143,7 @@ function setStartBlock(blockNum) {
   // Start querying for transactions starting with this block num
   // Set an interval method to query for new blocks in the cononical chain. 
   newBlockInterval = setInterval(function() {
-    console.log('Query for Block: ' + currentBlockNum);
+    // console.log('Query for Block: ' + currentBlockNum);
     ethereum.getBlockByNum(currentBlockNum, onTransactionsInNewBlock);
   }, 1000);
 }

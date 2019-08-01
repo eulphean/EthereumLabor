@@ -36,11 +36,10 @@ class Cell {
 // This farm will be planted with transactions. 
 // Then these transactions will be mined. 
 class Farm {
-    constructor() {
-      this.cellWidth = 10; 
-      this.cellHeight = 10;
-      this.columns = displayWidth/this.cellWidth; 
-      this.rows = displayHeight/this.cellHeight;
+    constructor(cellSize) {
+      this.cellWidth = cellSize; 
+      this.cellHeight = cellSize;
+      this.calcRowsColumns();
       this.cells = [];   
 
       console.log('Display Width: ' + displayWidth);
@@ -50,15 +49,7 @@ class Farm {
       console.log('Total Items: ' + this.rows*this.columns);
 
       // Create the cells in the farm. 
-      for (var i = 0; i < this.columns; i++) {
-        this.cells[i] = []; // 2D array assign.
-        for (var j = 0; j < this.rows; j++) {
-          var xPos = i * this.cellWidth;
-          var yPos = j * this.cellHeight; 
-          var cell = new Cell(xPos, yPos);
-          this.cells[i][j] = cell;
-        }
-      }
+      this.createCells(); 
       
       // Farm stats. 
       this.totalCells = this.rows * this.columns;  
@@ -110,7 +101,7 @@ class Farm {
 
     mine(transactions) {
         if (transactions.length > 0) {
-            console.log('Mining Farm.');
+            // console.log('Mining Farm.');
             for (var i =0; i < this.columns; i++) {
                 for (var j = 0; j < this.rows; j++) {
                     if (this.cells[i][j].isPlanted) {
@@ -121,7 +112,7 @@ class Farm {
                         
                         // Mine that cell if this transaction is found in mined block. 
                         if (found) {
-                            console.log('Transaction found');
+                            // console.log('Transaction found');
                             // Reset cell. 
                             this.cells[i][j].set(color(255, 0, 0), false, '');
                             clearTimeout(this.cells[i][j].deathTimeout);
@@ -154,6 +145,7 @@ class Farm {
     }
 
     clearFarm() {
+        // Redraw grid. 
         for (var i=0; i < this.columns; i++) {
             for (var j = 0; j < this.rows; j++) {
                 // Reset cell.
@@ -166,9 +158,39 @@ class Farm {
         }
     }
 
+    recreateFarm() {
+        // Recalculate rows and columns in case cellSize has changed. 
+        this.calcRowsColumns();
+
+        // Recreate the cells. 
+        this.createCells();
+    }
+
     setFarmCapacity(capacity) {
         // Capacity is a number between 0-100
         this.maxCells = int((capacity / 100) * this.totalCells); 
-        console.log('Set Farm Capacity (%, maxCells): ' + capacity + '%' + ', ' + this.maxCells);
+        // console.log('Set Farm Capacity (%, maxCells): ' + capacity + '%' + ', ' + this.maxCells);
+    }
+
+    setCellSize(size) {
+        this.cellWidth = size; 
+        this.cellHeight = size; 
+    }
+
+    calcRowsColumns() {
+        this.columns = displayWidth/this.cellWidth; 
+        this.rows = displayHeight/this.cellHeight;
+    }
+
+    createCells() {
+        for (var i = 0; i < this.columns; i++) {
+            this.cells[i] = []; // 2D array assign.
+            for (var j = 0; j < this.rows; j++) {
+              var xPos = i * this.cellWidth;
+              var yPos = j * this.cellHeight; 
+              var cell = new Cell(xPos, yPos);
+              this.cells[i][j] = cell;
+            }
+          }
     }
   }

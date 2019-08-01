@@ -34,7 +34,7 @@ class Ethereum {
                 if (result != null) {
                     var num = result.number; 
                     if (blockNum === num) {
-                        console.log('Fetched Block, Transactions: ' + blockNum + ', ' + result.transactions.length) ;
+                        // console.log('Fetched Block, Transactions: ' + blockNum + ', ' + result.transactions.length) ;
                         // Send back transactions data with this callback
                         onTransactions(result.transactions); 
                     }
