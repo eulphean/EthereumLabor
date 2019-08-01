@@ -53,7 +53,7 @@ class Farm {
       this.createCells(); 
       
       // Farm stats. 
-      this.setFarmState();
+      this.setFarmStats();
     }
   
     draw() {
