@@ -13,23 +13,45 @@ class Cell {
         this.txHash = ''; 
         // Death timer variable
         this.deathTimeout = null; 
+        this.animateTimer = null; 
     }    
 
-    draw(w, h) {
+    draw() {
         push();
             // Translate to the center of the cell. 
-            translate(this.xPos + w/2, this.yPos + h/2);
+            translate(this.xPos + cellSize/2, this.yPos + cellSize/2);
             stroke(cellStrokeColor);
-            strokeWeight(0.5); 
             fill(this.col);
-            ellipse(0, 0, w, h); // Rather than rectangles, these will be circles actually at the center of the cell. 
+            ellipse(0, 0, cellSize, cellSize, 200); // Rather than rectangles, these will be circles actually at the center of the cell. 
         pop();
     }
 
-    set(color, planted, tx) {
-        this.col = color; 
+    set(finalColor, planted, tx, shouldAnimate, animationPeriod) {
+        // Begin animation interval if I want to animate 
+        if (shouldAnimate)
+            this.animateTimer = setInterval(this.animate.bind(this), animationPeriod, finalColor);
+        else 
+            this.col = finalColor; 
+
         this.isPlanted = planted; 
         this.txHash = tx; 
+    }
+
+    // lerp from current color to the final color. 
+    animate(finalColor) {
+        this.col = lerpColor(this.col, finalColor, 0.3); 
+        if (this.isColorSame(this.col, finalColor)) {
+            clearInterval(this.animateTimer); 
+        } else 
+            this.draw(cellSize, cellSize); // Keep drawing till animation is not finished. 
+    }
+
+    isColorSame(x, y) {
+        let thresh = 0.5; 
+        // Make sure RGB are equal values. 
+        return (abs(x.levels[0] - y.levels[0]) <= thresh && 
+                    abs(x.levels[1] - y.levels[1]) <= thresh && 
+                        abs(x.levels[2] >= y.levels[2]) <= thresh); 
     }
 }
 
@@ -37,9 +59,7 @@ class Cell {
 // This farm will be planted with transactions. 
 // Then these transactions will be mined. 
 class Farm {
-    constructor(cellSize) {
-      this.cellWidth = cellSize; 
-      this.cellHeight = cellSize;
+    constructor() {
       this.calcRowsColumns();
       this.cells = [];   
 
@@ -59,7 +79,7 @@ class Farm {
     draw() {
       for (var i = 0; i < this.columns; i++) {
         for (var j = 0; j < this.rows; j++) {
-           this.cells[i][j].draw(this.cellWidth, this.cellHeight);
+           this.cells[i][j].draw();
         }
       }
     }
@@ -67,10 +87,9 @@ class Farm {
     kill(cell) {
         console.log('Killing planted cell.');
         // Reset cell. 
-        cell.set(defaultCellColor, false, '')
-        clearTimeout(cell.deathTimeout);
-        // Redraw cell. 
-        cell.draw(this.cellWidth, this.cellHeight);
+        clearTimeout(cell.deathTimeout); 
+        clearInterval(cell.animateTimer); // Reset animation
+        cell.set(defaultCellColor, false, '', true, 100)
 
         // Killed. 
         this.plantedCells--; 
@@ -87,11 +106,12 @@ class Farm {
             // Plant the transaction in that cell by updating these parameters. 
             // set(color, isPlanted, txHash)
             // setTimeout(callback, timeout, parameter)
-            cell.set(color(0, 255, 0), true, txHash);
-            cell.deathTimeout = setTimeout(this.kill.bind(this), 5 * 60 * 1000, cell); // Kill this transaction after 10 minutes
+            console.log('Planting a transaction');
 
-            // Redraw cell. 
-            cell.draw(this.cellWidth, this.cellHeight);
+            // Reset the animation (it could be a mined cell)
+            clearInterval(cell.animateTimer);
+            cell.set(plantColor, true, txHash, true, 200); // Begin animating. 
+            cell.deathTimeout = setTimeout(this.kill.bind(this), 2 * 60 * 1000, cell); // Kill this transaction after 10 minutes
             
             // Planted. 
             this.plantedCells++; 
@@ -111,13 +131,11 @@ class Farm {
                         
                         // Mine that cell if this transaction is found in mined block. 
                         if (found) {
-                            // console.log('Transaction found');
+                            console.log('Mining transaction.');
                             // Reset cell. 
-                            this.cells[i][j].set(color(255, 0, 0), false, '');
+                            clearInterval(this.cells[i][j].animateTimer); // Reset animation (it's a planted cell)
                             clearTimeout(this.cells[i][j].deathTimeout);
-                            
-                            // Redraw cell.
-                            this.cells[i][j].draw(this.cellWidth, this.cellHeight);
+                            this.cells[i][j].set(mineColor, false, '', true, 200); // Begin animating.
                             
                             // Mined.
                             this.plantedCells--; 
@@ -148,11 +166,12 @@ class Farm {
         for (var i=0; i < this.columns; i++) {
             for (var j = 0; j < this.rows; j++) {
                 // Reset cell.
-                this.cells[i][j].set(defaultCellColor, false, '');
+                this.cells[i][j].set(defaultCellColor, false, '', false, 0);
                 clearTimeout(this.cells[i][j].deathTimeout); 
+                clearInterval(this.cells[i][j].animateTimer);
 
                 // Redraw cell. 
-                this.cells[i][j].draw(this.cellWidth, this.cellHeight);
+                this.cells[i][j].draw();
             }
         }
 
@@ -176,14 +195,10 @@ class Farm {
         // console.log('Set Farm Capacity (%, maxCells): ' + capacity + '%' + ', ' + this.maxCells);
     }
 
-    setCellSize(size) {
-        this.cellWidth = size; 
-        this.cellHeight = size; 
-    }
 
     calcRowsColumns() {
-        this.columns = displayWidth/this.cellWidth; 
-        this.rows = displayHeight/this.cellHeight;
+        this.columns = displayWidth/cellSize; 
+        this.rows = displayHeight/cellSize;
     }
 
     setFarmStats() {
@@ -196,8 +211,8 @@ class Farm {
         for (var i = 0; i < this.columns; i++) {
             this.cells[i] = []; // 2D array assign.
             for (var j = 0; j < this.rows; j++) {
-              var xPos = i * this.cellWidth;
-              var yPos = j * this.cellHeight; 
+              var xPos = i * cellSize;
+              var yPos = j * cellSize; 
               var cell = new Cell(xPos, yPos);
               this.cells[i][j] = cell;
             }

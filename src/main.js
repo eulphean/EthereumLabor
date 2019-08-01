@@ -36,10 +36,12 @@ var initialDraw = true;
 var isTracking = false; 
 var isVisible = true; 
 
-// Background color
+// Global colors
 var bgColor;
 var defaultCellColor; 
 var cellStrokeColor; 
+var plantColor;
+var mineColor; 
 
 // GUI Variables. 
 var gui; 
@@ -56,7 +58,9 @@ function setup() {
   // Define global main colors. 
   bgColor = color(64,47,43);
   defaultCellColor = color(51, 38, 36); 
-  cellStrokeColor = color(83, 85, 88, 255);
+  cellStrokeColor = color(64,47,43);
+  plantColor = color(0, 255, 0); 
+  mineColor = color(255, 0, 0);
 
   // Canvas where all the visualization is running. 
   createCanvas(displayWidth, displayHeight); 
@@ -85,7 +89,6 @@ function draw() {
 
   // For every GUI change, draw is called. 
   farm.setFarmCapacity(farmCapacity);
-  farm.setCellSize(cellSize);
 
   // Dingy logic to start/stop tracking based on 
   // a GUI button. 
