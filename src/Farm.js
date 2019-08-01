@@ -53,9 +53,7 @@ class Farm {
       this.createCells(); 
       
       // Farm stats. 
-      this.totalCells = this.rows * this.columns;  
-      this.plantedCells = 0; 
-      this.maxCells = this.totalCells; // Max available cells for planting. 
+      this.setFarmState();
     }
   
     draw() {
@@ -157,6 +155,8 @@ class Farm {
                 this.cells[i][j].draw(this.cellWidth, this.cellHeight);
             }
         }
+
+        this.setFarmStats(); 
     }
 
     recreateFarm() {
@@ -165,6 +165,9 @@ class Farm {
 
         // Recreate the cells. 
         this.createCells();
+
+        // Reset farm stats.
+        this.setFarmStats();
     }
 
     setFarmCapacity(capacity) {
@@ -181,6 +184,12 @@ class Farm {
     calcRowsColumns() {
         this.columns = displayWidth/this.cellWidth; 
         this.rows = displayHeight/this.cellHeight;
+    }
+
+    setFarmStats() {
+        this.totalCells = this.rows * this.columns;  
+        this.plantedCells = 0; 
+        this.maxCells = this.totalCells; // Max available cells for planting. 
     }
 
     createCells() {
