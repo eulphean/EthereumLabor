@@ -6,7 +6,7 @@ class Cell {
         this.xPos = x,  
         this.yPos = y;
         // Assign a random shade when initiating the cell. 
-        this.col = 50;
+        this.col = defaultCellColor; 
         // Crop is not planted yet. 
         this.isPlanted = false; 
         // Transaction hash of the transaction.  
@@ -19,7 +19,8 @@ class Cell {
         push();
             // Translate to the center of the cell. 
             translate(this.xPos + w/2, this.yPos + h/2);
-            stroke(0);
+            stroke(cellStrokeColor);
+            strokeWeight(0.5); 
             fill(this.col);
             ellipse(0, 0, w, h); // Rather than rectangles, these will be circles actually at the center of the cell. 
         pop();
@@ -68,7 +69,7 @@ class Farm {
     kill(cell) {
         console.log('Killing planted cell.');
         // Reset cell. 
-        cell.set(50, false, '')
+        cell.set(defaultCellColor, false, '')
         clearTimeout(cell.deathTimeout);
         // Redraw cell. 
         cell.draw(this.cellWidth, this.cellHeight);
@@ -149,7 +150,7 @@ class Farm {
         for (var i=0; i < this.columns; i++) {
             for (var j = 0; j < this.rows; j++) {
                 // Reset cell.
-                this.cells[i][j].set(50, false, '');
+                this.cells[i][j].set(defaultCellColor, false, '');
                 clearTimeout(this.cells[i][j].deathTimeout); 
 
                 // Redraw cell. 

@@ -36,6 +36,11 @@ var initialDraw = true;
 var isTracking = false; 
 var isVisible = true; 
 
+// Background color
+var bgColor;
+var defaultCellColor; 
+var cellStrokeColor; 
+
 // GUI Variables. 
 var gui; 
 // Farm capacity. 
@@ -48,9 +53,14 @@ var hideLabel = 'Press h to hide GUI and cursor';
 
 // ------------------------------- Sketch Setup ------------------------------
 function setup() {
+  // Define global main colors. 
+  bgColor = color(64,47,43);
+  defaultCellColor = color(51, 38, 36); 
+  cellStrokeColor = color(83, 85, 88, 255);
+
   // Canvas where all the visualization is running. 
   createCanvas(displayWidth, displayHeight); 
-  background(0);
+  background(bgColor);
 
   // Initialize Ethereum controller.
   ethereum = new Ethereum();
@@ -93,7 +103,7 @@ function draw() {
 
   // Reset the farm
   if (resetFarm) {
-    background(0);
+    background(bgColor);
     farm.recreateFarm();
     resetFarm = !resetFarm; 
     // Redraw the farm. 
@@ -108,7 +118,7 @@ function onPendingTransaction(txHash) {
 }
 
 function onNewBlockHeader(block) {
-  // console.log('New Block Header Received: ' + block.number);
+  console.log('New Block Header Received: ' + block.number);
   // Update Last Block Time, Best Block. 
 }
 
