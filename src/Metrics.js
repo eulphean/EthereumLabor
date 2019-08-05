@@ -25,7 +25,7 @@ class Metrics {
             var div = createDiv('');
             div.parent(this.container);
             div.style('border-style', 'solid');
-            div.style('border-color', 'coral'); 
+            div.style('border-color', '#0C0C0C'); 
             div.style('border-width', metricsSubTileBorderWidth);
             div.size(this.subWidth, this.subHeight);
             div.position(i*this.subWidth, 0);

@@ -64,12 +64,12 @@ var metrics;
 // ------------------------------- Sketch Setup ------------------------------
 function setup() {
   // Define global variables here. 
-  bgColor = color(64,47,43);
-  defaultCellColor = color(51, 38, 36); 
-  cellStrokeColor = color(64,47,43);
-  plantColor = color(0, 255, 0); 
-  mineColor = color(255, 0, 0);
-  metricsTileHeight = 200; 
+  bgColor = color(0,0,0);
+  defaultCellColor = color(36, 36, 36); 
+  cellStrokeColor = color(0,0,0);
+  plantColor = color(100, 148, 6); 
+  mineColor = /*color(255, 0, 0);*/ color(216, 216, 220); 
+  metricsTileHeight = 75; 
   metricsSubTileBorderWidth = '0.1px'; // 2 pixels
 
   // Canvas where all the visualization is running. 

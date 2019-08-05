@@ -47,7 +47,7 @@ class Cell {
     }
 
     isColorSame(x, y) {
-        let thresh = 0.5; 
+        let thresh = 0.2; 
         // Make sure RGB are equal values. 
         return (abs(x.levels[0] - y.levels[0]) <= thresh && 
                     abs(x.levels[1] - y.levels[1]) <= thresh && 
