@@ -74,6 +74,9 @@ class Farm {
       
       // Farm stats. 
       this.setFarmStats();
+      
+      // Kill this cell in about 3 minutes
+      this.killMinutes = 3; 
     }
   
     draw() {
@@ -111,7 +114,7 @@ class Farm {
             // Reset the animation (it could be a mined cell)
             clearInterval(cell.animateTimer);
             cell.set(plantColor, true, txHash, true, 200); // Begin animating. 
-            cell.deathTimeout = setTimeout(this.kill.bind(this), 2 * 60 * 1000, cell); // Kill this transaction after 10 minutes
+            cell.deathTimeout = setTimeout(this.kill.bind(this), this.killMinutes * 60 * 1000, cell); // Kill this transaction after 10 minutes
             
             // Planted. 
             this.plantedCells++; 

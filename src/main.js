@@ -42,6 +42,8 @@ var defaultCellColor;
 var cellStrokeColor; 
 var plantColor;
 var mineColor; 
+var metricsTileHeight; 
+var metricsSubTileBorderWidth; 
 
 // GUI Variables. 
 var gui; 
@@ -52,15 +54,23 @@ var cellSize = 10; // Default value.
 var startStop = false; 
 var resetFarm = false; 
 var hideLabel = 'Press h to hide GUI and cursor';
+// Height of the metrics container
+var metricsContainerPosition = 200; 
+var metricsContainerOpacity = 0.5; 
+
+// Metrics
+var metrics; 
 
 // ------------------------------- Sketch Setup ------------------------------
 function setup() {
-  // Define global main colors. 
+  // Define global variables here. 
   bgColor = color(64,47,43);
   defaultCellColor = color(51, 38, 36); 
   cellStrokeColor = color(64,47,43);
   plantColor = color(0, 255, 0); 
   mineColor = color(255, 0, 0);
+  metricsTileHeight = 200; 
+  metricsSubTileBorderWidth = '0.1px'; // 2 pixels
 
   // Canvas where all the visualization is running. 
   createCanvas(displayWidth, displayHeight); 
@@ -70,6 +80,9 @@ function setup() {
   ethereum = new Ethereum();
   farm = new Farm(cellSize);
 
+  // Metrics container
+  metrics = new Metrics();
+
   // Initialize GUI
   sliderRange(1, 90, 1);
   gui = createGui('Ethereum Labor', 20, 20);
@@ -77,6 +90,10 @@ function setup() {
   sliderRange(5, 15, 5);
   gui.addGlobals('cellSize', 'resetFarm');
   gui.addGlobals('startStop', 'hideLabel');
+  sliderRange(0, displayHeight-metricsTileHeight, 1); 
+  gui.addGlobals('metricsContainerPosition');
+  sliderRange(0, 1, 0.05);
+  gui.addGlobals('metricsContainerOpacity');
 }
 
 // ------------------------------- Sketch Draw (loop) ------------------------
@@ -112,6 +129,9 @@ function draw() {
     // Redraw the farm. 
     initialDraw = true; 
   }
+
+  // Set metrics tile's position.
+  metrics.setDynamicStyles(metricsContainerOpacity, metricsContainerPosition);
 }
 
 // ------------------------------- Ethereum Subsribe Callbacks -----------------
