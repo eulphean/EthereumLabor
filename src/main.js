@@ -50,7 +50,7 @@ var gui;
 // Farm capacity. 
 var farmCapacity = 50; // Default value. 
 // Cell size 
-var cellSize = 10; // Default value. 
+var cellSize = 15; // Default value. 
 var startStop = false; 
 var resetFarm = false; 
 var hideLabel = 'Press h to hide GUI and cursor';
