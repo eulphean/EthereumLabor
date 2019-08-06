@@ -1,56 +1,80 @@
 // [div]
 // [[[Title][Metric]][[Title][Metric]][[Title][Metric]][[Title][Metric]][[Title][Metric]]]
+class Tile {
+    constructor (title) {
+        this.parent = createDiv();
+        this.parent.style('display', 'flex'); 
+        this.parent.style('flex-direction', 'row'); 
+        this.parent.style('align-items', 'center');
+        this.parent.size(displayWidth/5, metricsTileHeight);
+
+        var title = this.createMetricDiv(title); 
+        var metric = this.createMetricDiv('');
+        this.children = [title, metric]; 
+
+        // Hide this metric for now. 
+        this.parent.hide();
+    }
+
+    createMetricDiv(innerText) {
+        var child = createDiv(innerText); 
+        child.style('flex-grow', '1'); 
+        child.style('text-align', 'center');
+        child.style('font-size', '25px');
+        child.style('font-family', 'Menlo-Regular');
+        child.style('color', '#DCDCDC');
+        child.parent(this.parent); 
+    }
+
+    // Set the parent node for this container
+    setParent(parent) {
+        this.parent.parent(parent);
+        this.parent.show();
+        // Some bug in p5.js where hide() reset the display to block
+        // So, I reset the display of this container back to flex.
+        this.parent.style('display', 'flex'); 
+    }
+
+    setPosition(x, y) {
+        this.parent.position(x, y);
+    }
+}; 
+
 class Metrics {
     constructor() {
-        this.titles = ['Best Block', 'Last Block', 'Farm Capacity', 'Avg Hash Rate', 'Difficulty'];
-        this.container = createDiv(''); 
+        // Container of all the metrics. 
+        this.parent = createDiv(''); 
 
         // Containers styles 
-        this.container.size(displayWidth, metricsTileHeight); 
-        this.container.style('background-color', 'black');
+        this.parent.size(displayWidth, metricsTileHeight); 
+        this.parent.style('background-color', 'black');
+        this.parent.style('display', 'flex');
 
-        // Create 5 sub containers
-        this.subContainers = [];
-        this.subWidth = displayWidth/5; 
-        this.subHeight = metricsTileHeight; 
-        this.createSubContainers(); 
+        // Create all metrics tiles and hide them. 
+        this.bestBlock = new Tile('Best Block'); 
+        this.lastBlockTime = new Tile('Last Block');
+        this.farmCapacity = new Tile('Farm Capacity');
+        this.avgHashRate = new Tile('Avg Hash Rate');
+        this.difficulty = new Tile('Difficulty');
+        this.ethPrice = new Tile('ETH Price');
+        this.ethMarketCap = new Tile('ETH Market Cap');
+        this.maxFarmCapacity = new Tile('Max Farm Capacity'); 
+
+        // Set initial children. 
+        this.children = [this.bestBlock, this.lastBlockTime, this.farmCapacity, this.avgHashRate, this.difficulty];
+        this.showChildren(); 
     }
 
     setDynamicStyles(opacity, yPosition) {
         // Update container and sub containers
-        this.container.position(0, yPosition);
-        this.container.style('opacity', opacity);
+        this.parent.position(0, yPosition);
+        this.parent.style('opacity', opacity);
     }
 
-    createSubContainers() {
-        // Create 4 sub containers to show metrics. 
-        for (var i = 0; i < 5; i++) {
-            var metricParent = createDiv('');
-            metricParent.style('display', 'flex'); 
-            metricParent.style('flex-direction', 'row'); 
-            metricParent.style('align-items', 'center');
-            metricParent.parent(this.container);
-            metricParent.size(this.subWidth, this.subHeight);
-            metricParent.position(i*this.subWidth, 0);
-
-            // Create div (title)
-            this.createMetricDiv(this.titles[i], metricParent);
-
-            // Create div (metric) 
-            this.createMetricDiv('812042', metricParent);
-
-            // Store this div. 
-            this.subContainers.push(metricParent);
+    showChildren() {
+        for (let i = 0; i < this.children.length; i++) {
+            var c = this.children[i]; 
+            c.setParent(this.parent);
         }
-    }
-
-    createMetricDiv(title, parent) {
-        var div = createDiv(title); 
-        div.style('flex-grow', '1'); 
-        div.style('text-align', 'center');
-        div.style('font-size', '25px');
-        div.style('font-family', 'Menlo-Regular');
-        div.style('color', '#DCDCDC');
-        div.parent(parent); 
     }
 }
