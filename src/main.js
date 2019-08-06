@@ -202,8 +202,8 @@ function setStartBlock(blockNum) {
 function onTransactionsInNewBlock(minedTransactions, totalDifficulty) {
     // Update Difficulty, Hash Rate
     console.log('Difficulty: ' + totalDifficulty);
-    var difficulty = totalDifficulty / Math.pow(10, 21);
-    metrics.difficulty.children[1].html(difficulty.toFixed(1) + 'ZHashes');
+    var difficulty = totalDifficulty / Math.pow(10, 12);
+    metrics.difficulty.children[1].html(Math.round(difficulty) + 'TH');
 
     // Mine these completed transactions in the farm.  
     farm.mine(minedTransactions); 

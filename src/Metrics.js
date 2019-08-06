@@ -16,7 +16,7 @@ class Tile {
         this.parent.hide();
     }
 
-    createMetricDiv(innerText) {
+    createMetricDiv(innerText, grow) {
         var child = createDiv(innerText); 
         child.style('flex-grow', '1'); 
         child.style('text-align', 'center');
