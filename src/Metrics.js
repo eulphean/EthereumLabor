@@ -24,6 +24,7 @@ class Tile {
         child.style('font-family', 'Menlo-Regular');
         child.style('color', '#DCDCDC');
         child.parent(this.parent); 
+        return child; 
     }
 
     // Set the parent node for this container

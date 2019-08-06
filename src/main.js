@@ -61,6 +61,10 @@ var metricsContainerOpacity = 0.95;
 // Metrics
 var metrics; 
 
+// Last Block Tracker
+var lastBlockInterval; 
+var lastBlockCounter = 0; 
+
 // ------------------------------- Sketch Setup ------------------------------
 function setup() {
   // Define global variables here. 
@@ -139,11 +143,20 @@ function draw() {
 function onPendingTransaction(txHash) {
   // Plant this transaction in the farm. 
   farm.plant(txHash); 
+
+  // Update farm capacity. 
+  var capacity = farm.getCapacity(); 
+  metrics.farmCapacity.children[1].html(capacity + '%');
 }
 
 function onNewBlockHeader(block) {
   console.log('New Block Header Received: ' + block.number);
-  // Update Last Block Time, Best Block. 
+  
+  // Update Best Block
+  metrics.bestBlock.children[1].html(block.number);
+
+  // Update last block counter time
+  lastBlockCounter = 0; 
 }
 
 // ------------------------------- Button Callbacks ------------------------------
@@ -174,6 +187,10 @@ function setStartBlock(blockNum) {
   currentBlockNum = blockNum;
   console.log('Starting Block Number: ' + currentBlockNum); 
 
+  metrics.bestBlock.children[1].html(currentBlockNum);
+
+  lastBlockInterval = setInterval(updateLastBlockTime, 1000); 
+
   // Start querying for transactions starting with this block num
   // Set an interval method to query for new blocks in the cononical chain. 
   newBlockInterval = setInterval(function() {
@@ -182,8 +199,11 @@ function setStartBlock(blockNum) {
   }, 1000);
 }
 
-function onTransactionsInNewBlock(minedTransactions) {
+function onTransactionsInNewBlock(minedTransactions, totalDifficulty) {
     // Update Difficulty, Hash Rate
+    console.log('Difficulty: ' + totalDifficulty);
+    var difficulty = totalDifficulty / Math.pow(10, 21);
+    metrics.difficulty.children[1].html(difficulty.toFixed(1) + 'ZHashes');
 
     // Mine these completed transactions in the farm.  
     farm.mine(minedTransactions); 
@@ -201,4 +221,9 @@ function keyPressed() {
     gui.hide();
     noCursor();
   }
+}
+
+function updateLastBlockTime() {
+  lastBlockCounter = lastBlockCounter + 1; 
+  metrics.lastBlockTime.children[1].html(lastBlockCounter + 's ago');
 }

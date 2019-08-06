@@ -198,7 +198,6 @@ class Farm {
         // console.log('Set Farm Capacity (%, maxCells): ' + capacity + '%' + ', ' + this.maxCells);
     }
 
-
     calcRowsColumns() {
         this.columns = displayWidth/cellSize; 
         this.rows = displayHeight/cellSize;
@@ -220,5 +219,10 @@ class Farm {
               this.cells[i][j] = cell;
             }
           }
+    }
+
+    getCapacity() {
+        var capacity = (this.plantedCells/this.totalCells) * 100;
+        return capacity.toFixed(1);  
     }
   }
