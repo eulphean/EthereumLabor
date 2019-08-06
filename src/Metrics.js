@@ -2,6 +2,7 @@
 // [[[Title][Metric]][[Title][Metric]][[Title][Metric]][[Title][Metric]][[Title][Metric]]]
 class Metrics {
     constructor() {
+        this.titles = ['Best Block', 'Last Block', 'Farm Capacity', 'Avg Hash Rate', 'Difficulty'];
         this.container = createDiv(''); 
 
         // Containers styles 
@@ -33,7 +34,7 @@ class Metrics {
             metricParent.position(i*this.subWidth, 0);
 
             // Create div (title)
-            this.createMetricDiv('Best Block', metricParent);
+            this.createMetricDiv(this.titles[i], metricParent);
 
             // Create div (metric) 
             this.createMetricDiv('812042', metricParent);
