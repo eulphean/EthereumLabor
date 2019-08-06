@@ -1,0 +1,7 @@
+/* Declare the Menlo font family */
+@font-face {
+    font-family: 'Menlo Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Menlo Regular'), url('Font/Menlo-Regular.woff') format('woff');
+}

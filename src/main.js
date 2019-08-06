@@ -55,8 +55,8 @@ var startStop = false;
 var resetFarm = false; 
 var hideLabel = 'Press h to hide GUI and cursor';
 // Height of the metrics container
-var metricsContainerPosition = 200; 
-var metricsContainerOpacity = 0.5; 
+var metricsContainerPosition; 
+var metricsContainerOpacity = 0.95; 
 
 // Metrics
 var metrics; 
@@ -69,7 +69,8 @@ function setup() {
   cellStrokeColor = color(0,0,0);
   plantColor = color(100, 148, 6); 
   mineColor = /*color(255, 0, 0);*/ color(216, 216, 220); 
-  metricsTileHeight = 75; 
+  metricsTileHeight = 45; 
+  metricsContainerPosition = displayHeight - metricsTileHeight; 
   metricsSubTileBorderWidth = '0.1px'; // 2 pixels
 
   // Canvas where all the visualization is running. 
