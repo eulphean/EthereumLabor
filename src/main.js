@@ -48,7 +48,7 @@ var metricsSubTileBorderWidth;
 // GUI Variables. 
 var gui; 
 // Farm capacity. 
-var farmCapacity = 50; // Default value. 
+var farmCapacity = 95; // Default value. 
 // Cell size 
 var cellSize = 15; // Default value. 
 var startStop = false; 
@@ -89,7 +89,7 @@ function setup() {
   metrics = new Metrics();
 
   // Initialize GUI
-  sliderRange(1, 90, 1);
+  sliderRange(1, 95, 1);
   gui = createGui('Ethereum Labor', 20, 20);
   gui.addGlobals('farmCapacity');
   sliderRange(5, 15, 5);

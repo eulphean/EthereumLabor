@@ -76,7 +76,7 @@ class Farm {
       this.setFarmStats();
       
       // Kill this cell in about 3 minutes
-      this.killMinutes = 3; 
+      this.killMinutes = 2; 
     }
   
     draw() {
