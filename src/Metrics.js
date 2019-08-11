@@ -6,7 +6,7 @@ class Tile {
         this.parent.style('display', 'flex'); 
         this.parent.style('flex-direction', 'row'); 
         this.parent.style('align-items', 'center');
-        this.parent.size(displayWidth/5, metricsTileHeight);
+        // this.parent.size(displayWidth/5, metricsTileHeight);
 
         // Check if we are creating a metric div or a legend div.  
         var title = this.createTitleDiv(title); 
@@ -17,7 +17,7 @@ class Tile {
 
     createCircularDiv(colr) {
         var child = createDiv(); 
-        child.style('margin-left', '20px');
+        child.style('margin-left', '15px');
         child.style('height', '20px');
         child.style('width', '20px');
         child.style('border-radius', '50%');
@@ -28,7 +28,7 @@ class Tile {
 
     createTitleDiv(innerText) {
         var child = createDiv(innerText); 
-        child.style('margin-left', '40px');
+        // child.style('margin-left', '40px');
         child.style('text-align', 'center');
         child.style('font-size', '25px');
         child.style('font-family', 'Menlo-Regular');
@@ -39,7 +39,7 @@ class Tile {
 
     createMetricDiv(innerText) {
         var child = createDiv(innerText); 
-        child.style('margin-left', '20px');
+        child.style('margin-left', '15px');
         child.style('text-align', 'center');
         child.style('font-size', '25px');
         child.style('font-family', 'Menlo-Regular');

@@ -166,6 +166,9 @@ function startTracking() {
 
   // Set Starting Block number from where I'll beging tracking transactions. 
   ethereum.getLatestBlock(setStartBlock);
+
+  // Get latest ethereum price
+  ethereum.getEthereumPrice(onEthPrice);
 }
 
 function stopTracking() {
