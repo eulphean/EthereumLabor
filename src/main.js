@@ -65,6 +65,9 @@ var metrics;
 var lastBlockInterval; 
 var lastBlockCounter = 0; 
 
+// Electricity
+var electricityPerTransaction = 45; // 45 kWh
+
 // ------------------------------- Sketch Setup ------------------------------
 function setup() {
   // Define global variables here. 
@@ -143,18 +146,11 @@ function draw() {
 function onPendingTransaction(txHash) {
   // Plant this transaction in the farm. 
   farm.plant(txHash); 
-
-  // Update farm capacity. 
-  var capacity = farm.getCapacity(); 
-  metrics.farmCapacity.children[1].html(capacity + '%');
 }
 
 function onNewBlockHeader(block) {
   console.log('New Block Header Received: ' + block.number);
   
-  // Update Best Block
-  metrics.bestBlock.children[1].html(block.number);
-
   // Update last block counter time
   lastBlockCounter = 0; 
 }
@@ -187,8 +183,6 @@ function setStartBlock(blockNum) {
   currentBlockNum = blockNum;
   console.log('Starting Block Number: ' + currentBlockNum); 
 
-  metrics.bestBlock.children[1].html(currentBlockNum);
-
   lastBlockInterval = setInterval(updateLastBlockTime, 1000); 
 
   // Start querying for transactions starting with this block num
@@ -199,14 +193,14 @@ function setStartBlock(blockNum) {
   }, 1000);
 }
 
-function onTransactionsInNewBlock(minedTransactions, totalDifficulty) {
-    // Update Difficulty, Hash Rate
-    console.log('Difficulty: ' + totalDifficulty);
-    var difficulty = totalDifficulty / Math.pow(10, 12);
-    metrics.difficulty.children[1].html(Math.round(difficulty) + 'TH');
+function onTransactionsInNewBlock(minedTransactions) {
 
     // Mine these completed transactions in the farm.  
     farm.mine(minedTransactions); 
+
+    // Set electricity consumed / block
+    var electricity = minedTransactions.length  * electricityPerTransaction; 
+    metrics.electricityConsumed.children[1].html(electricity + ' kWh');
 
     // Update currentBlockNum to query next block. 
     currentBlockNum = currentBlockNum + 1; 
