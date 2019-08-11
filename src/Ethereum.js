@@ -3,6 +3,8 @@ class Ethereum {
         // Initiate the Ethereum controller. 
         this.projectId = '24b152bca7704bf39741eed185972f92';
         this.infuraWS = 'wss://mainnet.infura.io/ws/v3/';
+        this.coinGeckoEndpoint = "https://api.coingecko.com/api/v3/";
+        this.ethereumPrice = "simple/price?ids=ethereum&vs_currencies=usd"; 
 
         // Ethereum subscriptions only work with a Websocket Provider.
         // This kind of a provider is available in Web3 release/1.0 branch.
@@ -55,5 +57,10 @@ class Ethereum {
                 }
             }
         });
+    }
+
+    getEthereumPrice(onEthPrice) {
+        var url = this.coinGeckoEndpoint + this.ethereumPrice; 
+        loadJSON(url, onEthPrice); 
     }
 };

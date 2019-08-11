@@ -150,6 +150,8 @@ function onPendingTransaction(txHash) {
 
 function onNewBlockHeader(block) {
   console.log('New Block Header Received: ' + block.number);
+
+  ethereum.getEthereumPrice(onEthPrice);
   
   // Update last block counter time
   lastBlockCounter = 0; 
@@ -206,6 +208,16 @@ function onTransactionsInNewBlock(minedTransactions) {
     currentBlockNum = currentBlockNum + 1; 
 }
 
+function onEthPrice(response) {
+  var price = response['ethereum']['usd']; 
+  metrics.ethPrice.children[1].html('$' + price);
+}
+
+function updateLastBlockTime() {
+  lastBlockCounter = lastBlockCounter + 1; 
+  metrics.lastBlockTime.children[1].html(lastBlockCounter + 's ago');
+}
+
 function keyPressed() {
   isVisible = !isVisible; 
   if (isVisible) {
@@ -215,9 +227,4 @@ function keyPressed() {
     gui.hide();
     noCursor();
   }
-}
-
-function updateLastBlockTime() {
-  lastBlockCounter = lastBlockCounter + 1; 
-  metrics.lastBlockTime.children[1].html(lastBlockCounter + 's ago');
 }
