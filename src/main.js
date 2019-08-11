@@ -34,7 +34,7 @@ var newBlockInterval;
 // Raw states. 
 var initialDraw = true; 
 var isTracking = false; 
-var isVisible = true; 
+var isVisible = false; 
 
 // Global colors
 var bgColor;
@@ -102,6 +102,8 @@ function setup() {
   gui.addGlobals('metricsContainerPosition');
   sliderRange(0, 1, 0.05);
   gui.addGlobals('metricsContainerOpacity');
+  gui.hide(); // Keep the GUI hidden to start with. 
+  noCursor();
 }
 
 // ------------------------------- Sketch Draw (loop) ------------------------
@@ -233,4 +235,8 @@ function keyPressed() {
     gui.hide();
     noCursor();
   }
+}
+
+function handleOnLoad() {
+  startTracking(); 
 }
