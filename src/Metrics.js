@@ -1,12 +1,13 @@
 // [div]
 // [[[Title][Metric]][[Title][Metric]][[Title][Metric]][[Title][Metric]][[Title][Metric]]]
 class Tile {
-    constructor (title, isLegend, colr = color(0)) { // Default color. 
+    constructor (title, widthFactor, isLegend, colr = color(0)) { // Default color. 
         this.parent = createDiv();
         this.parent.style('display', 'flex'); 
         this.parent.style('flex-direction', 'row'); 
         this.parent.style('align-items', 'center');
-        // this.parent.size(displayWidth/5, metricsTileHeight);
+        this.parent.style('margin-left', '31px');
+        this.parent.size(displayWidth/5 * widthFactor, metricsTileHeight);
 
         // Check if we are creating a metric div or a legend div.  
         var title = this.createTitleDiv(title); 
@@ -64,16 +65,16 @@ class Metrics {
         this.parent.style('display', 'flex');
 
         // Legend tiles
-        this.pendingTransactions = new Tile('Pending Transactions', true, plantColor);
-        this.minedTransactions = new Tile('Mined Transactions', true, mineColor); 
+        this.pendingTransactions = new Tile('Pending Transactions', 1.5, true, plantColor);
+        this.minedTransactions = new Tile('Mined Transactions', 1.5, true, mineColor); 
 
         // Metrics tiles
-        this.lastBlockTime = new Tile('Last Block', false);
-        this.electricityConsumed = new Tile('Electricity Consumed', false); // Use the number of transactions mined every block to calculate this number. 
-        this.ethPrice = new Tile('ETH Price', false);
+        this.lastBlockTime = new Tile('Last Block', 1.2, false);
+        this.electricityConsumed = new Tile('Electricity Consumed', 2.0, false); // Use the number of transactions mined every block to calculate this number. 
+        this.ethPrice = new Tile('ETH Price', 1.2, false);
 
         // Set all divs for this metrics container. 
-        this.children = [this.pendingTransactions, this.minedTransactions, this.lastBlockTime, this.electricityConsumed, this.ethPrice];
+        this.children = [this.pendingTransactions, this.minedTransactions, this.electricityConsumed, this.lastBlockTime, this.ethPrice];
         
         // Set the parent for all these child divs. 
         for (let i = 0; i < this.children.length; i++) {

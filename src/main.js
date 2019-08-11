@@ -203,9 +203,12 @@ function onTransactionsInNewBlock(minedTransactions) {
     // Mine these completed transactions in the farm.  
     farm.mine(minedTransactions); 
 
-    // Set electricity consumed / block
-    var electricity = minedTransactions.length  * electricityPerTransaction; 
-    metrics.electricityConsumed.children[1].html(electricity + ' kWh');
+    // If some transactions are mined, update electricity consumed. 
+    if (minedTransactions.length > 0) {
+      // Set electricity consumed / block
+      var electricity = minedTransactions.length  * electricityPerTransaction; 
+      metrics.electricityConsumed.children[1].html(electricity + ' kWh');
+    }
 
     // Update currentBlockNum to query next block. 
     currentBlockNum = currentBlockNum + 1; 
