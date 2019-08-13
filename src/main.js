@@ -226,16 +226,16 @@ function updateLastBlockTime() {
   metrics.lastBlockTime.children[1].html(lastBlockCounter + 's ago');
 }
 
-function keyPressed() {
-  isVisible = !isVisible; 
-  if (isVisible) {
-    gui.show();
-    cursor();
-  } else {
-    gui.hide();
-    noCursor();
-  }
-}
+// function keyPressed() {
+//   isVisible = !isVisible; 
+//   if (isVisible) {
+//     gui.show();
+//     cursor();
+//   } else {
+//     gui.hide();
+//     noCursor();
+//   }
+// }
 
 function handleOnLoad() {
   startTracking(); 
