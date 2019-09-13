@@ -1,8 +1,4 @@
+// Node server (2 server)
 
-Function:
-// Design the frame for the metrics to be show. 
-// Some design cycles before I can start coding the frame. 
-// How will I loop between multiple metrics of the farm. 
-
-Aesthetics: 
-// Animations for cells getting populated. 
+// Node Server 1 (where information will be uploaded)
+// Node Server 2 (which will pull information that is uploaded) => Print a receipt of that information
