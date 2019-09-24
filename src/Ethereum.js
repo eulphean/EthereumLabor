@@ -8,23 +8,18 @@ class Ethereum {
 
         // Ethereum subscriptions only work with a Websocket Provider.
         // This kind of a provider is available in Web3 release/1.0 branch.
-        //this.web3Provider = new Web3.providers.WebsocketProvider(this.infuraWS + this.projectId);
+  
         //this.web3Provider = new Web3.providers.HttpProvider("https://www.ethercluster.com/morden"); 
         // this.web3Provider = new Web3.providers.WebsocketProvider("wss://ws.web3api.io?x-api-key=UAK9b30bf4dbaaf128904e1a1a49137d772");
         
-        // this.web3 =new Web3(this.web3Provider);
+        this.web3Provider = new Web3.providers.WebsocketProvider(this.infuraWS + this.projectId);
+        this.web3 =new Web3(this.web3Provider);
 
         this.web3data = new Web3Data("UAK9b30bf4dbaaf128904e1a1a49137d772");
         this.web3data.connect(status => {
             console.log('status ->', status.type)
         }); 
     }
-
-    // responseHandler(event) {
-    //     const data = JSON.parse(event.data);
-    //     // console.log('New Event', data.id, data);
-    //     console.log('')
-    // }
 
     subscribe(onTransaction, onBlock) {
         // Subscribe to pending transactions. 
@@ -66,24 +61,47 @@ class Ethereum {
         // this.blockSubscription.unsubscribe(function (error, success) {});
     }
 
-    async getBlockByNum(blockNum, onTransactions) {
-        var block = await this.web3data.eth.getBlock(blockNum, {validationMethod : 'full'}); 
-        var num; 
-        if (block.number) {
-            num = block.number;
-        } else {
-            num = block.blocks.current;
-        }
-        console.log('Current Block Number: ' + blockNum + ', ' + num);
-        if (blockNum == num) {
-            console.log(block.validation.transactions);
-            onTransactions(block.validation.transactions); 
-        }
+    getBlockByNum(blockNum, onTransactions) {
+        // var block = await this.web3data.eth.getBlock(blockNum, {validationMethod : 'full'}); 
+        // var num; 
+        // if (block.number) {
+        //     num = block.number;
+        // } else {
+        //     num = block.blocks.current;
+        // }
+        // console.log('Current Block Number: ' + blockNum + ', ' + num);
+        // if (blockNum == num) {
+        //     console.log(block.validation.transactions);
+        //     onTransactions(block.validation.transactions); 
+        // }
+        this.web3.eth.getBlock(blockNum, false, function(error, result) {
+            if(!error) {
+                if (result != null) {
+                    var num = result.number; 
+                    if (blockNum === num) {
+                        // console.log('Fetched Block, Transactions: ' + blockNum + ', ' + result.transactions.length) ;
+                        // Send back transactions data with this callback
+                        onTransactions(result.transactions); 
+                    }
+                } 
+            }
+            else {
+                console.error(error);
+            }
+        });
     }
 
-    async getLatestBlock(setBlockNum) {
-        var block = await this.web3data.eth.getBlock('latest', {validationMethod : 'full'});
-        setBlockNum(block.number);
+    getLatestBlock(setBlockNum) {
+        // var block = await this.web3data.eth.getBlock('latest', {validationMethod : 'full'});
+        // setBlockNum(block.number);
+        this.web3.eth.getBlock('latest', false, function(error, result) {
+            if(!error) {
+                if (result != null) {
+                    let blockNum = result.number; 
+                    setBlockNum(blockNum);
+                }
+            }
+        });
     }
 
     getEthereumPrice(onEthPrice) {
