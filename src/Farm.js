@@ -129,7 +129,7 @@ class Farm {
                     if (this.cells[i][j].isPlanted) {
                         var hash = this.cells[i][j].txHash; 
                         var found = transactions.find(function(t) {
-                            return t === hash;
+                            return t.hash === hash;
                         });
                         
                         // Mine that cell if this transaction is found in mined block. 

@@ -34,7 +34,7 @@ var newBlockInterval;
 // Raw states. 
 var initialDraw = true; 
 var isTracking = false; 
-var isVisible = true; 
+var isVisible = false; 
 
 // Global colors
 var bgColor;
@@ -102,7 +102,7 @@ function setup() {
   gui.addGlobals('metricsContainerPosition');
   sliderRange(0, 1, 0.05);
   gui.addGlobals('metricsContainerOpacity');
-  // gui.hide(); // Keep the GUI hidden to start with. 
+  gui.hide(); // Keep the GUI hidden to start with. 
   noCursor();
 }
 
@@ -213,7 +213,7 @@ function onTransactionsInNewBlock(minedTransactions) {
     }
 
     // Update currentBlockNum to query next block. 
-    currentBlockNum = currentBlockNum + 1; 
+    currentBlockNum = parseInt(currentBlockNum, 10) + 1; 
 }
 
 function onEthPrice(response) {
@@ -227,16 +227,16 @@ function updateLastBlockTime() {
 }
 
 function keyPressed() {
-  isVisible = !isVisible; 
-  if (isVisible) {
-    gui.show();
-    cursor();
-  } else {
-    gui.hide();
-    noCursor();
-  }
+  // isVisible = !isVisible; 
+  // if (isVisible) {
+  //   gui.show();
+  //   cursor();
+  // } else {
+  //   gui.hide();
+  //   noCursor();
+  // }
 }
 
 function handleOnLoad() {
-  // startTracking(); 
+  startTracking(); 
 }
