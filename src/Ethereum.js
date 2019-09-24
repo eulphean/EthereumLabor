@@ -1,7 +1,7 @@
 class Ethereum {
     constructor() {
         // Initiate the Ethereum controller. 
-        this.projectId = '24b152bca7704bf39741eed185972f92';
+        this.projectId = 'f1c2741a46ef4b6da35206c7e2b32887';
         this.infuraWS = 'wss://mainnet.infura.io/ws/v3/';
         this.coinGeckoEndpoint = "https://api.coingecko.com/api/v3/";
         this.ethereumPrice = "simple/price?ids=ethereum&vs_currencies=usd"; 
@@ -15,19 +15,31 @@ class Ethereum {
     subscribe(onTransaction, onBlock) {
         // Subscribe to pending transactions. 
         this.txSubscription = this.web3.eth.subscribe('pendingTransactions', function (error, result) {
-        }).on("data", onTransaction); 
+            console.log('Pending transaction'); 
+        }).on("data", onTransaction)
+        .on("error", function(e) {
+            console.error(e); 
+            console.error("Connection Failed");
+        })
+        .on("end", function(e) {
+            console.log("Connection Ended");
+        })
 
-        // Subscribe to new blocks. 
-        this.blockSubscription = this.web3.eth.subscribe('newBlockHeaders', function (error, result) {    
-        }).on("data", onBlock); 
+        // // Subscribe to new blocks. 
+        // this.blockSubscription = this.web3.eth.subscribe('newBlockHeaders', function (error, result) {    
+        // }).on("data", onBlock); 
     }
 
     unsubscribe() {
         // Unsubscribe from pending transactions. 
-        this.txSubscription.unsubscribe(function (error, success) {});
+        this.txSubscription.unsubscribe(function (error, success) {
+            if (error) {
+                console.error('Failed to unsubscribe');
+            }
+        });
 
         // Unsubscribe from new block headers. 
-        this.blockSubscription.unsubscribe(function (error, success) {});
+        // this.blockSubscription.unsubscribe(function (error, success) {});
     }
 
     getBlockByNum(blockNum, onTransactions) {
