@@ -109,7 +109,7 @@ class Farm {
             // Plant the transaction in that cell by updating these parameters. 
             // set(color, isPlanted, txHash)
             // setTimeout(callback, timeout, parameter)
-            console.log('Planting a transaction');
+            // console.log('Planting a transaction');
 
             // Reset the animation (it could be a mined cell)
             clearInterval(cell.animateTimer);
