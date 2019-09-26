@@ -69,9 +69,9 @@ class Ethereum {
             } else {
                 num = block.blocks.current;
             }
-            console.log('Current Block Number: ' + blockNum + ', ' + num);
+            //console.log('Current Block Number: ' + blockNum + ', ' + num);
             if (blockNum == num) {
-                console.log(block.validation.transactions);
+                //(block.validation.transactions);
                 onTransactions(block.validation.transactions); 
             }
         }); 
