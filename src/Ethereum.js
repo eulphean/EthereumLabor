@@ -12,10 +12,7 @@ class Ethereum {
         //this.web3Provider = new Web3.providers.HttpProvider("https://www.ethercluster.com/morden"); 
         // this.web3Provider = new Web3.providers.WebsocketProvider("wss://ws.web3api.io?x-api-key=UAK9b30bf4dbaaf128904e1a1a49137d772");
         
-        this.web3Provider = new Web3.providers.WebsocketProvider(this.infuraWS + this.projectId);
-        this.web3Provider.on("end", () => this.retry());
-        this.web3Provider.on("error", () => this.retry());
-        this.web3 = new Web3(this.web3Provider);
+        this.setProvider(); 
 
         this.web3data = new Web3Data("UAK9b30bf4dbaaf128904e1a1a49137d772");
         this.web3data.connect(status => {
@@ -23,9 +20,11 @@ class Ethereum {
         }); 
     }
 
-    retry() {
+    setProvider() {
         console.log('Infura Disconnected: Retrying');
         this.web3Provider = new Web3.providers.WebsocketProvider(this.infuraWS + this.projectId);
+        this.web3Provider.on("end", () => this.setProvider());
+        this.web3Provider.on("error", () => this.setProvider());
         this.web3 = new Web3(this.web3Provider);
     }
 
