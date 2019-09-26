@@ -88,7 +88,7 @@ class Farm {
     }
 
     kill(cell) {
-        console.log('Killing planted cell.');
+        //console.log('Killing planted cell.');
         // Reset cell. 
         clearTimeout(cell.deathTimeout); 
         clearInterval(cell.animateTimer); // Reset animation
@@ -109,7 +109,7 @@ class Farm {
             // Plant the transaction in that cell by updating these parameters. 
             // set(color, isPlanted, txHash)
             // setTimeout(callback, timeout, parameter)
-            console.log('Planting a transaction');
+            //console.log('Planting a transaction');
 
             // Reset the animation (it could be a mined cell)
             clearInterval(cell.animateTimer);
@@ -134,7 +134,7 @@ class Farm {
                         
                         // Mine that cell if this transaction is found in mined block. 
                         if (found) {
-                            console.log('Mining transaction.');
+                            //console.log('Mining transaction.');
                             // Reset cell. 
                             clearInterval(this.cells[i][j].animateTimer); // Reset animation (it's a planted cell)
                             clearTimeout(this.cells[i][j].deathTimeout);
