@@ -28,13 +28,13 @@ class Cell {
 
     set(finalColor, planted, tx, shouldAnimate, animationPeriod) {
         // Begin animation interval if I want to animate 
-        if (shouldAnimate)
-            this.animateTimer = setInterval(this.animate.bind(this), animationPeriod, finalColor);
-        else 
-            this.col = finalColor; 
-
+        // if (shouldAnimate)
+        //     this.animateTimer = setInterval(this.animate.bind(this), animationPeriod, finalColor);
+        // else 
+        this.col = finalColor; 
         this.isPlanted = planted; 
         this.txHash = tx; 
+        this.draw(cellSize, cellSize); // Redraw this cell. 
     }
 
     // lerp from current color to the final color. 
@@ -92,7 +92,7 @@ class Farm {
         // Reset cell. 
         clearTimeout(cell.deathTimeout); 
         clearInterval(cell.animateTimer); // Reset animation
-        cell.set(defaultCellColor, false, '', true, 100)
+        cell.set(defaultCellColor, false, '', false, 100)
 
         // Killed. 
         this.plantedCells--; 
@@ -109,11 +109,11 @@ class Farm {
             // Plant the transaction in that cell by updating these parameters. 
             // set(color, isPlanted, txHash)
             // setTimeout(callback, timeout, parameter)
-            //console.log('Planting a transaction');
+            console.log('Planting a transaction');
 
             // Reset the animation (it could be a mined cell)
             clearInterval(cell.animateTimer);
-            cell.set(plantColor, true, txHash, true, 200); // Begin animating. 
+            cell.set(plantColor, true, txHash, false, 200); // Begin animating. 
             cell.deathTimeout = setTimeout(this.kill.bind(this), this.killMinutes * 60 * 1000, cell); // Kill this transaction after 10 minutes
             
             // Planted. 
@@ -138,7 +138,7 @@ class Farm {
                             // Reset cell. 
                             clearInterval(this.cells[i][j].animateTimer); // Reset animation (it's a planted cell)
                             clearTimeout(this.cells[i][j].deathTimeout);
-                            this.cells[i][j].set(mineColor, false, '', true, 200); // Begin animating.
+                            this.cells[i][j].set(mineColor, false, '', false, 200); // Begin animating.
                             
                             // Mined.
                             this.plantedCells--; 
