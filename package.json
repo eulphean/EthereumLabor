@@ -21,6 +21,6 @@
     "gulp": "^4.0.2"
   },
   "dependencies": {
-    "web3data-js": "^0.5.3"
+    "web3data-js": "^0.5.6"
   }
 }

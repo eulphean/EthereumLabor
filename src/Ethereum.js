@@ -17,7 +17,7 @@ class Ethereum {
         this.web3data = new Web3Data("UAK9b30bf4dbaaf128904e1a1a49137d772");
         this.web3data.connect(status => {
             console.log('status ->', status.type);
-        }); 
+        });
     }
 
     setProvider() {
