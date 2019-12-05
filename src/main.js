@@ -68,8 +68,13 @@ var lastBlockCounter = 0;
 // Electricity
 var electricityPerTransaction = 45; // 45 kWh
 
+var isMobile = false; 
+
 // ------------------------------- Sketch Setup ------------------------------
 function setup() {
+  isMobile = detectmob();
+  console.log(isMobile);
+
   // Define global variables here. 
   bgColor = color(0,0,0);
   defaultCellColor = color(36, 36, 36); 
@@ -89,7 +94,9 @@ function setup() {
   farm = new Farm(cellSize);
 
   // Metrics container
-  metrics = new Metrics();
+  if (isMobile == false) {
+    metrics = new Metrics();
+  }
 
   // Initialize GUI
   sliderRange(1, 95, 1);
@@ -140,8 +147,11 @@ function draw() {
     initialDraw = true; 
   }
 
-  // Set metrics tile's position.
-  metrics.setDynamicStyles(metricsContainerOpacity, metricsContainerPosition);
+  if (!isMobile) {
+    // Set metrics tile's position.
+    metrics.setDynamicStyles(metricsContainerOpacity, metricsContainerPosition);
+  }
+
 }
 
 // ------------------------------- Ethereum Subsribe Callbacks -----------------
@@ -209,7 +219,9 @@ function onTransactionsInNewBlock(minedTransactions) {
     if (minedTransactions.length > 0) {
       // Set electricity consumed / block
       var electricity = minedTransactions.length  * electricityPerTransaction; 
-      metrics.electricityConsumed.children[1].html(electricity + ' kWh');
+      if (!isMobile) {
+        metrics.electricityConsumed.children[1].html(electricity + ' kWh');
+      }
     }
 
     // Update currentBlockNum to query next block. 
@@ -218,12 +230,16 @@ function onTransactionsInNewBlock(minedTransactions) {
 
 function onEthPrice(response) {
   var price = response['ethereum']['usd']; 
-  metrics.ethPrice.children[1].html('$' + price);
+  if (!isMobile) {
+    metrics.ethPrice.children[1].html('$' + price);
+  }
 }
 
 function updateLastBlockTime() {
   lastBlockCounter = lastBlockCounter + 1; 
-  metrics.lastBlockTime.children[1].html(lastBlockCounter + 's ago');
+  if (!isMobile) {
+    metrics.lastBlockTime.children[1].html(lastBlockCounter + 's ago');
+  }
 }
 
 function keyPressed() {
@@ -240,3 +256,19 @@ function keyPressed() {
 function handleOnLoad() {
   startTracking(); 
 }
+
+function detectmob() { 
+  if( navigator.userAgent.match(/Android/i)
+  || navigator.userAgent.match(/webOS/i)
+  || navigator.userAgent.match(/iPhone/i)
+  || navigator.userAgent.match(/iPad/i)
+  || navigator.userAgent.match(/iPod/i)
+  || navigator.userAgent.match(/BlackBerry/i)
+  || navigator.userAgent.match(/Windows Phone/i)
+  ){
+     return true;
+   }
+  else {
+     return false;
+   }
+ }
