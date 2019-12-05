@@ -89,12 +89,3 @@ class Metrics {
         this.parent.style('opacity', opacity);
     }
 }
-
-// Create all metrics tiles and hide them. 
-// this.bestBlock = new Tile('Best Block'); 
-// this.farmCapacity = new Tile('Farm Capacity');
-// this.avgHashRate = new Tile('Avg Hash Rate');
-// this.difficulty = new Tile('Difficulty');
-// this.ethPrice = new Tile('ETH Price');
-// this.ethMarketCap = new Tile('ETH Market Cap');
-// this.maxFarmCapacity = new Tile('Max Farm Capacity'); 

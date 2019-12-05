@@ -89,6 +89,15 @@ function setup() {
   createCanvas(displayWidth, displayHeight); 
   background(bgColor);
 
+  // 
+  if (displayWidth < 1336) {
+    cellSize = 10;
+  }
+
+  if (displayWidth < 414) {
+    cellSize = 5; 
+  }
+
   // Initialize Ethereum controller.
   ethereum = new Ethereum();
   farm = new Farm(cellSize);
